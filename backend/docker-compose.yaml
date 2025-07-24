@@ -1,0 +1,24 @@
+services:
+  db:
+    image: postgres
+    restart: unless-stopped
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: 123
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: dpage/pgadmin4
+    restart: unless-stopped
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=test@vikrams.in
+      - PGADMIN_DEFAULT_PASSWORD=123
+    ports:
+      - 8080:80
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    ports:
+      - 6379:6379
