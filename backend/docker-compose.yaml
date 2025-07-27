@@ -1,5 +1,6 @@
 services:
   db:
+    container_name: postgres
     image: postgres
     restart: unless-stopped
     shm_size: 128mb
@@ -9,6 +10,7 @@ services:
       - 5432:5432
 
   adminer:
+    container_name: adminer
     image: dpage/pgadmin4
     restart: unless-stopped
     environment:
@@ -18,6 +20,7 @@ services:
       - 8080:80
 
   redis:
+    container_name: redis
     image: redis:alpine
     restart: unless-stopped
     ports:

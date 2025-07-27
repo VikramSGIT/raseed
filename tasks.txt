@@ -1,0 +1,20 @@
+1. We have live agent, demo is also ready can parse recipt.
+2. 
+
+Our principles:
+1. Multi user
+2. Secure
+3. 
+
+1. History (Vik)
+2. Wallet Integration (Update, callbacks) (Rak)
+3. Camera (CosmicPegasus)
+4. Analytics components (Srushti)
+5. Thinking Analytics (it should create google wallet pass) (Rak)
+6. Notification implementation. (Srushti)
+7. Group Adding (Vik)
+8. OAuth Integration (Vik)
+9. Drive upload (add to table) (Vik)
+10. Adding receipt.(Vik, Rak)
+11. Design task flow.
+12. Design flow for price drop alerts.

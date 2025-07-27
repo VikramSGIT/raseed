@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.exceptions import HTTPException
@@ -5,48 +6,22 @@ from services.sessions import init_session
 from services.oauth import get_credentials, get_login_redirect_url
 from repository.database import get_user_by_email, create_user, init_db, shutdown_db
 from contextlib import asynccontextmanager
-from asyncio import sleep
 from pydantic import BaseModel
-from agents.agent import init_agents, run
+import uvicorn
+from dotenv import load_dotenv
+load_dotenv()
+
+CLIENT_BASE_URL: str = os.getenv("CLIENT_BASE_URL", '')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await init_db(app)
-    await init_agents(app)
-    file_path = './testUI.html'
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            app.state.home_page = file.read()
-    except FileNotFoundError:
-        print(f"Error: The file at '{file_path}' was not found.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
     yield
     await shutdown_db(app)
 
 app = FastAPI(lifespan=lifespan)
 
 app.middleware("http")(init_session)
-
-@app.get("/login")
-async def login_page():
-    # HTML page with a Google login button
-    return HTMLResponse(content=f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <title>Login</title>
-    </head>
-    <body>
-        <h2>Login with Google</h2>
-        <a href="/auth/google/login">
-            <img src="https://developers.google.com/identity/images/btn_google_signin_dark_normal_web.png"
-                 alt="Sign in with Google"
-                 style="height: 40px;" />
-        </a>
-    </body>
-    </html>
-    """)
 
 @app.get("/home")
 async def home_page():
@@ -62,9 +37,9 @@ async def home_page():
 class RequestData(BaseModel):
     prompt: str
 
-@app.post("/generate")
-async def generate(request: Request, data: RequestData):
-    return {'response': await run(app=app, prompt=data.prompt, session=request.state.session)}
+# @app.post("/generate")
+# async def generate(request: Request, data: RequestData):
+#     return {'response': await run(app=app, prompt=data.prompt, session=request.state.session)}
 
 @app.get("/auth/google/login")
 async def login_with_google():
@@ -84,4 +59,7 @@ async def auth_callback(request: Request, code: str = '', error: str = ''):
     
     request.state.session['user_id'] = user_id
 
-    return RedirectResponse(app.url_path_for('home_page'))
+    return RedirectResponse(CLIENT_BASE_URL + os.getenv('DASHBOARD_ENDPOINT', '/'))
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="localhost", port=8000)

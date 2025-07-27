@@ -5,7 +5,7 @@ CREATE TYPE expense_type AS ENUM ('expense', 'payment');
 
 --
 -- Table: users
--- YOU ARE RESTRICTED ACCESS FROM THIS SKIP TO LINE 31.
+-- USE safe_user_view table. YOU ARE RESTRICTED ACCESS FROM THIS SKIP TO LINE 31. 
 -- 
 -- This is the central table for storing all user information. Every person who signs up
 -- for the application will have a record here. It holds authentication details, personal
@@ -16,8 +16,6 @@ CREATE TABLE users (
     user_id            BIGSERIAL PRIMARY KEY,
     -- name: The full name of the user.
     name               TEXT NOT NULL,
-    -- google_wallet_cred: Google Wallet integration. Unique to each user.
-    google_wallet_cred TEXT UNIQUE,
     -- email: The user's email address, used for login and communication. Must be unique.
     email              TEXT NOT NULL UNIQUE,
     -- password_hash: The user's password, stored in a secure, hashed format.
@@ -32,7 +30,8 @@ CREATE TABLE users (
 --
 -- View: safe_users_view
 --
--- Contains all AI safe information about users.
+-- Contains all AI safe information about users. Use this user table to run queries.
+--
 CREATE VIEW safe_users_view AS
 SELECT
     -- user_id: A unique number that serves as the primary identifier for each user.
@@ -163,6 +162,8 @@ CREATE TABLE expense_receipts (
     url           TEXT NOT NULL,
     -- uploaded_at: A timestamp recording when the receipt was uploaded.
     uploaded_at   TIMESTAMP DEFAULT now()
+
+    bought_at TIMESTAMP
 );
 
 --

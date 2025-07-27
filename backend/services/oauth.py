@@ -1,13 +1,11 @@
 import os
-from dotenv import load_dotenv
-load_dotenv()
 import requests
 from fastapi.exceptions import HTTPException
 import urllib.parse
 
-GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
-GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
-REDIRECT_URI = "http://localhost:8081/auth/google/callback"
+GOOGLE_CLIENT_ID = "**"
+GOOGLE_CLIENT_SECRET = "**"
+REDIRECT_URI = "http://localhost:8000/auth/google/callback"
 
 AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 TOKEN_URL = "https://oauth2.googleapis.com/token"
